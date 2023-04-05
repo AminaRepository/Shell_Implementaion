@@ -6,10 +6,11 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <time.h>
+#include <sys/param.h>
 
 #define max_history_size 15
 #define FORTUNE_FILE NULL //address of fortune file
-#define MEMINFO_FILE "/proc/meminfo" //address of memory info file
+#define MEMINFO_FILE NULL //address of memory info file
 int command_history[max_history_size];
 int rear = -1;
 int front = -1;
@@ -33,60 +34,75 @@ int main(int argc, char* argv[]){
 	gethostname(hostname, HOST_NAME_MAX +1);
 	char *buf;
 	buf = (char *)malloc(10*sizeof(char));
+	if(!buf){ printf("bad buffer"); }
 	buf = getlogin();
 	while(run){
+		printf("\033[0;35m"); //text color set o purple
 		printf("%s@%c$\n", hostname, *buf);
+		printf("\033[0;34m"); //text color set to blue
 		scanf("%d", &task);
+		printf("\033[0m"); //text color set to black
 	switch(task){
 		default:
 			printf("error");
 		case 1:
+			run = false;
+			break;
+
+		case 2:
 			//copy file into new directory
 			FILE *fp1, *fp2;
-			fp1 = fopen(argv[1], "r");
-			fp2 = fopen(argv[2], "w");
+			char ch, fnamesrc[50], fnamedest[50];
+			printf("Source file name: \n");
+			scanf("%s", fnamesrc);
+			printf("Destination file name: \n");
+			scanf("%s", fnamedest);
+			fp1 = fopen(fnamesrc, "r");
+			fp2 = fopen(fnamedest, "w");
 			if(!fp1 || !fp2){ printf("error"); }
-			char c;
-			while((c=fgetc(fp1)) != EOF){ fputc(c, fp2); }
+			while((ch=fgetc(fp1)) != EOF){ fputc(ch, fp2); }
 			fclose(fp1);
 			fclose(fp2);
-			insert(1);
-			break;
-		case 2:
-			//show command history
 			insert(2);
+			break;
+		case 3:
+			//show command history
+			insert(3);
 			if(front == -1){ printf("command history empty\n"); }
 			else{ for(int i = front; i <= rear; i++) {
 				switch(command_history[i]){
-				case 1:
+				case 2:
 				printf("copy file\n");
 				break;
-				case 2:
+				case 3:
 				printf("command history displayed\n");
 				break;
-				case 3:
+				case 4:
 				printf("program free used\n");
 				break;
-				case 4:
+				case 5:
 				printf("fortune line displayed\n");
 				break;
-				case 5:
+				case 6:
 				printf("fork system call used\n");
 				break;
-				case 6:
+				case 7:
 				printf("wait system call used\n");
 				break;
-				case 7:
+				case 8:
 				printf("execl system call used\n");
 				break;
-				case 8:
+				case 9:
 				printf("execlp system call used\n");
+				break;
+				case 10:
+				printf("vfork system call used\n");
 				break;
 				}
 				}
 			}
 			break;
-		case 3:
+		case 4:
 			//implement free program
 			FILE *file_free;
     			char line[256];
@@ -111,7 +127,7 @@ int main(int argc, char* argv[]){
 			fclose(file_free);
 			insert(3);
 			break;
-		case 4:
+		case 5:
 			//implement fortune
 			FILE *file_fortune;
 			char *line_fortune = NULL;
@@ -128,17 +144,17 @@ int main(int argc, char* argv[]){
 			}
 			}
 			fclose(file_fortune);
-			if(line){ free(line_fortune); }
+			free(line_fortune);
 			insert(4);
 			break;
-		case 5:
+		case 6:
 			//implement system call fork
 			int rd1 = fork();
 			if(rd1==0){ printf("I am child process, my pid is %d\n", (int) getpid()); }
 			if(rd1>0){ printf("I am parent process, my pid is %d\n", (int) getpid()); }
 			insert(5);
 			break;
-		case 6:
+		case 7:
 			//implement system call wait
 			int rd2 = fork();
 			if(rd2 == 0){ printf("I am child process, my pid is %d\n", (int) getpid()); }
@@ -148,7 +164,7 @@ int main(int argc, char* argv[]){
 				printf("Child process has been terminated\n"); }
 			insert(6);
 			break;
-		case 7:
+		case 8:
 			//implement system call exec
 			char *binaryPath = "/bin/ls";
 			char *arg1 = "-lh";
@@ -156,7 +172,7 @@ int main(int argc, char* argv[]){
 			execl(binaryPath, binaryPath, arg1, arg2, NULL);
 			insert(7);
 			break;
-		case 8:
+		case 9:
 			//implement system call execlp
 			char *programName = "ls";
 			char *arg3 = "-lh";
@@ -164,8 +180,16 @@ int main(int argc, char* argv[]){
 			execlp(programName, programName, arg3, arg4, NULL);
 			insert(8);
 			break;
+		case 10:
+			//implement system call vfork
+			int rd3 = vfork();
+			if(rd3 == 0){ printf("I am child process, my pid is %d\n", (int) getpid()); }
+			if(rd3 > 0){ printf("I am parent process, my pid is %d\n", (int) getpid()); 
+			wait(NULL);
+			printf("Child process is terminated\n");
+			}
+			//my system does not have the necessary rfork library to execute the code, otherwise it should be correct
 	}
-	free(buf);
 	return 0;
         }
 }
