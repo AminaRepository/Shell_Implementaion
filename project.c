@@ -88,7 +88,27 @@ int main(int argc, char* argv[]){
 			break;
 		case 3:
 			//implement free program
-			
+			FILE *file_free;
+    			char line[256];
+    			unsigned long long mem_total, mem_free, mem_used, mem_buffers, mem_cached;
+			file_free = fopen(MEMINFO_FILE, "r");
+    			if (file == NULL){ printf("error\n"); }
+			while (fgets(line, sizeof(line), file)) {
+        		if (sscanf(line, "MemTotal: %llu kB", &mem_total) == 1) {
+            		continue;
+        		} else if (sscanf(line, "MemFree: %llu kB", &mem_free) == 1) {
+            		continue;
+        		} else if (sscanf(line, "Buffers: %llu kB", &mem_buffers) == 1) {
+            		continue;
+        		} else if (sscanf(line, "Cached: %llu kB", &mem_cached) == 1) {
+            		continue;
+        		}
+    			}
+			mem_used = mem_total - mem_free - mem_buffers - mem_cached;
+			printf("             total       used       free     shared    buffers     cache\n");
+    			printf("Mem:       %8llu %8llu %8llu          0 %8llu %8llu\n", mem_total, mem_used, mem_free, mem_buffers, mem_cached);
+    			printf("-/+ buffers/cache: %8llu %8llu\n", mem_used - mem_buffers - mem_cached, mem_free + mem_buffers + mem_cached);
+			fclose(file);
 			insert(3);
 			break;
 		case 4:
