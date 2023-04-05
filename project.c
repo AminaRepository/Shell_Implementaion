@@ -9,7 +9,7 @@
 #include <sys/param.h>
 
 #define max_history_size 15
-#define FORTUNE_FILE NULL //address of fortune file
+#define FORTUNE_FILE "fortune.txt" //address of fortune file
 #define MEMINFO_FILE NULL //address of memory info file
 int command_history[max_history_size];
 int rear = -1;
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]){
 	buf = getlogin();
 	while(run){
 		printf("\033[0;35m"); //text color set o purple
-		printf("%s@%c:~$\n", hostname, *buf);
+		printf("%s@%c$\n", hostname, *buf);
 		printf("\033[0;34m"); //text color set to blue
 		scanf("%d", &task);
 		printf("\033[0m"); //text color set to black
