@@ -92,8 +92,8 @@ int main(int argc, char* argv[]){
     			char line[256];
     			unsigned long long mem_total, mem_free, mem_used, mem_buffers, mem_cached;
 			file_free = fopen(MEMINFO_FILE, "r");
-    			if (file == NULL){ printf("error\n"); }
-			while (fgets(line, sizeof(line), file)) {
+    			if (file_free == NULL){ printf("error\n"); }
+			while (fgets(line, sizeof(line), file_free)) {
         		if (sscanf(line, "MemTotal: %llu kB", &mem_total) == 1) {
             		continue;
         		} else if (sscanf(line, "MemFree: %llu kB", &mem_free) == 1) {
@@ -108,27 +108,27 @@ int main(int argc, char* argv[]){
 			printf("             total       used       free     shared    buffers     cache\n");
     			printf("Mem:       %8llu %8llu %8llu          0 %8llu %8llu\n", mem_total, mem_used, mem_free, mem_buffers, mem_cached);
     			printf("-/+ buffers/cache: %8llu %8llu\n", mem_used - mem_buffers - mem_cached, mem_free + mem_buffers + mem_cached);
-			fclose(file);
+			fclose(file_free);
 			insert(3);
 			break;
 		case 4:
 			//implement fortune
-			FILE *file;
-			char *line = NULL;
+			FILE *file_fortune;
+			char *line_fortune = NULL;
 			size_t len = 0;
 			ssize_t read;
-			file = fopen(FORTUNE_FILE, "r");
-			if(file == NULL){ printf("error"); }
+			file_fortune = fopen(FORTUNE_FILE, "r");
+			if(file_fortune == NULL){ printf("error"); }
 			srand(time(NULL));
 			int line_count = 0;
-			while((read = getline(&line, &len, file)) != -1){
+			while((read = getline(&line_fortune, &len, file_fortune)) != -1){
 			line_count++;
 			if(rand()%line_count == 0){
-			printf("%s", line);
+			printf("%s", line_fortune);
 			}
 			}
-			fclose(file);
-			if(line){ free(line); }
+			fclose(file_fortune);
+			if(line){ free(line_fortune); }
 			insert(4);
 			break;
 		case 5:
