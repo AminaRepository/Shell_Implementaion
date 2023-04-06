@@ -7,18 +7,18 @@
 #include <stdbool.h>
 #include <time.h>
 #include <sys/param.h>
+#include <sys/resource.h>
 
 #define max_history_size 15
 #define FORTUNE_FILE "fortune.txt" //address of fortune file
-#define MEMINFO_FILE NULL //address of memory info file
 int command_history[max_history_size];
 int rear = -1;
 int front = -1;
- 
+
 void enqueue(){ front +=1; }
 
 void insert(int item){
-	if(rear == max_history_size-1){ 
+	if(rear == max_history_size-1){
 		enqueue();
 	}
 	else{
@@ -95,36 +95,17 @@ int main(int argc, char* argv[]){
 				case 9:
 				printf("execlp system call used\n");
 				break;
-				case 10:
-				printf("vfork system call used\n");
-				break;
 				}
 				}
 			}
 			break;
 		case 4:
 			//implement free program
-			FILE *file_free;
-    			char line[256];
-    			unsigned long long mem_total, mem_free, mem_used, mem_buffers, mem_cached;
-			file_free = fopen(MEMINFO_FILE, "r");
-    			if (file_free == NULL){ printf("error\n"); }
-			while (fgets(line, sizeof(line), file_free)) {
-        		if (sscanf(line, "MemTotal: %llu kB", &mem_total) == 1) {
-            		continue;
-        		} else if (sscanf(line, "MemFree: %llu kB", &mem_free) == 1) {
-            		continue;
-        		} else if (sscanf(line, "Buffers: %llu kB", &mem_buffers) == 1) {
-            		continue;
-        		} else if (sscanf(line, "Cached: %llu kB", &mem_cached) == 1) {
-            		continue;
-        		}
-    			}
-			mem_used = mem_total - mem_free - mem_buffers - mem_cached;
-			printf("             total       used       free     shared    buffers     cache\n");
-    			printf("Mem:       %8llu %8llu %8llu          0 %8llu %8llu\n", mem_total, mem_used, mem_free, mem_buffers, mem_cached);
-    			printf("-/+ buffers/cache: %8llu %8llu\n", mem_used - mem_buffers - mem_cached, mem_free + mem_buffers + mem_cached);
-			fclose(file_free);
+			struct rusage usage;
+			getrusage(RUSAGE_SELF, &usage);
+			long page_size = sysconf(_SC_PAGESIZE);
+			long max_rss = usage.ru_maxrss * page_size /1024 /1024;
+			printf("Memory usage: %ld MB\n", max_rss);
 			insert(3);
 			break;
 		case 5:
@@ -180,15 +161,6 @@ int main(int argc, char* argv[]){
 			execlp(programName, programName, arg3, arg4, NULL);
 			insert(8);
 			break;
-		case 10:
-			//implement system call vfork
-			int rd3 = vfork();
-			if(rd3 == 0){ printf("I am child process, my pid is %d\n", (int) getpid()); }
-			if(rd3 > 0){ printf("I am parent process, my pid is %d\n", (int) getpid()); 
-			wait(NULL);
-			printf("Child process is terminated\n");
-			}
-			//my system does not have the necessary rfork library to execute the code, otherwise it should be correct
 	}
 	return 0;
         }
