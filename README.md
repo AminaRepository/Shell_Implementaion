@@ -1,6 +1,7 @@
-Group members: Amina HUkic, Eldar Gljiva
+Group members: Amina Hukic, Eldar Gljiva
 
-files: project.c
+files:
+project.c
 fortune.txt (needed for fortune lines)
 add_on.txt (used to test copy file task)
 
@@ -8,8 +9,20 @@ Assignement question answers:
 
 Q1: Do the following actions require OS to use kernel mode or user mode is sufficient? Explain
 1. A program wants to read from disk.
+In most operating systems, kernel mode is required to read from a disk. When a process needs to access data stored on a disk, it typically issues a system call to the OS's kernel requesting the data. The kernel then handles the request and performs the necessary operations to read the data from the disk.
+The reason kernel mode is needed is that disks are typically managed by the OS and the kernel has direct access to the hardware resources.
+
 2. Reading the current time from the hardware clock.
-Q2: Exolain the purpose of a system call. There are different sets of system calls: list them and give at least 2 examples of a system call for each category.
+Reading from the hardware clock requires kernel mode privileges in most OS. The hardware clock (or Real-Time Clock RTC) is a hardware component that keeps track of current time even when the PC is powered off. Since it is part of hardware, kernel mode is needed.
+
+Q2: Explain the purpose of a system call. There are different sets of system calls: list them and give at least 2 examples of a system call for each category.
+The purpose of a system call is to provide a secure and controlled interface between the user-level processes and the kernel. 
+Some common sets of system calls including examples are:
+- process control system calls; fork(), exec(), wait()
+- file management system calls; open(), read(), write()
+- device management system calls; ioctl(), read(), write()
+- communication system calls; socket(), bind(), send()
+- memory management system calls; malloc(), free(), mmap()
 
 Outline of what was done for the assignement:
 At first we went through all the tasks given in the shell project pdf and went on to implement each required functionality one by one. 
@@ -17,7 +30,7 @@ After each functionality had basic code, we worked on optimizing and modifying t
 
 Challenges encountered along the way were mostly confusion on what to do, how to start, how to implement various parts that we did not learn about and had to figure out ourselves with no help.
 There were some issues working with files, struggling to access them.
-There was also a repeadet issue of the while loop getting ignored and the code ending after only one implementation.
+There was also a repeated issue of the while loop getting ignored and the code ending after only one input. There was nothing showcasing me what causes it and the code functions well in places other than the command line.
 
 Sources used were in large parts stackOverflow, ChatGPT, as well as various sites holding fragments of c code.
 
@@ -25,7 +38,7 @@ Sources used were in large parts stackOverflow, ChatGPT, as well as various site
 
 pdf file explaining necessary implementations and tasks;
 
-# OperatingSystemsProject
+OperatingSystemsProject
 
 Purpose: The purpose of this project is to familiarize you with the mechanics of process control
 through the implementation of a shell user interface. This includes the relationship between
