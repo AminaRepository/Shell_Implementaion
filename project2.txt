@@ -1,0 +1,19 @@
+In this part of the project, first we are going to write a simple code 
+as an example of the mmap and munmap system calls. The code is in the
+file memory.c, and simply allocates and the deallocates memory using
+said system calls.
+
+For the second part, we will make a programm that runs infinitely and
+measure the memory used. That task code is found in the file memory2.c and
+has a simple program that counts from one to ten repeadetly, and every
+three seconds it prints out memory usage.
+
+The third part is the same program but adjusted so that we map an empty
+page from the OS. That task is found in the file memory3.c
+The memory allocated is bigger than previously as we need additional
+memory to account for memory mapping.
+
+For the fourth and final part, the code is in the file memory4.c
+The memory allocated increases yet again as it needs to accomodate both for
+the empty page mapped as well as the data entry.
+
