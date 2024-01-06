@@ -1,3 +1,4 @@
+This is a project done for the Operating Systems course
 Group members: Amina Hukic, Eldar Gljiva
 
 files:
@@ -5,7 +6,7 @@ project.c
 fortune.txt (needed for fortune lines)
 add_on.txt (used to test copy file task)
 
-Assignement question answers:
+Assignment question answers:
 
 Q1: Do the following actions require OS to use kernel mode or user mode is sufficient? Explain
 1. A program wants to read from disk.
@@ -38,7 +39,7 @@ Sources used were in large parts stackOverflow, ChatGPT, as well as various site
 
 pdf file explaining necessary implementations and tasks;
 
-OperatingSystemsProject
+Operating Systems Project
 
 Purpose: The purpose of this project is to familiarize you with the mechanics of process control
 through the implementation of a shell user interface. This includes the relationship between
